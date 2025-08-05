@@ -7,6 +7,7 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['role'] !== 'admin') {
     header("Location: ../auth/login.php");
     exit;
 }
+require_once '../config/options.php';
 ?>
 <!DOCTYPE html>
 <html lang="id">
@@ -41,8 +42,12 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['role'] !== 'admin') {
                     </div>
                     <div>
                         <label for="posisi_jabatan" class="block text-sm font-medium text-gray-700">Posisi Jabatan</label>
-                        <input type="text" name="posisi_jabatan" id="posisi_jabatan" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-2">
-                        <p class="text-xs text-gray-500 mt-1">Contoh: Gubernur & Wakil Gubernur</p>
+                        <select name="posisi_jabatan" id="posisi_jabatan" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-2">
+                            <option value="" disabled selected>Pilih Posisi Jabatan</option>
+                            <?php foreach ($jabatan_options as $jabatan): ?>
+                                <option value="<?php echo htmlspecialchars($jabatan); ?>"><?php echo htmlspecialchars($jabatan); ?></option>
+                            <?php endforeach; ?>
+                        </select>
                     </div>
                     <div>
                         <label for="wilayah" class="block text-sm font-medium text-gray-700">Wilayah Pemilihan</label>
