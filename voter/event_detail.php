@@ -1,6 +1,10 @@
 <?php
 // File: voter/event_detail.php
 session_start();
+
+// Set timezone to ensure accurate time comparisons
+date_default_timezone_set('Asia/Jakarta');
+
 require_once '../config/database.php';
 
 if (!isset($_SESSION['logged_in']) || $_SESSION['role'] !== 'voter') {
