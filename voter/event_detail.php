@@ -67,8 +67,8 @@ $candidates = $stmt_candidates->get_result();
                                 <p class="text-lg font-semibold text-gray-900 transition-colors peer-checked:text-indigo-800"><?php echo htmlspecialchars($candidate['nama_kandidat']); ?></p>
                                 <p class="text-sm text-gray-500"><?php echo htmlspecialchars($candidate['partai_asal'] ?? 'Independen'); ?></p>
                             </div>
-                            <div class="ml-0 sm:ml-auto mt-4 sm:mt-0 sm:pl-4">
-                                <img src="../assets/images/<?php echo htmlspecialchars($candidate['foto_kandidat'] ?: 'placeholder.png'); ?>" alt="Foto <?php echo htmlspecialchars($candidate['nama_kandidat']); ?>" class="w-40 aspect-[16/9] rounded-lg object-cover shadow-sm">
+                            <div class="ml-0 sm:ml-auto mt-4 sm:mt-0 sm:pl-4 flex-shrink-0">
+                                <img src="assets/images/<?php echo htmlspecialchars($candidate['foto_kandidat'] ?: 'placeholder.png'); ?>" alt="Foto <?php echo htmlspecialchars($candidate['nama_kandidat']); ?>" class="w-48 h-auto aspect-[16/9] rounded-lg object-cover shadow-md border">
                             </div>
                         </div>
                     </label>

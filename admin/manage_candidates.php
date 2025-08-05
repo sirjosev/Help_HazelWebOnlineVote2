@@ -103,7 +103,8 @@ $candidates_result = $stmt_candidates->get_result();
                                 </td>
                                 <td class="px-6 py-4 font-semibold text-gray-900"><?php echo htmlspecialchars($candidate['nama_kandidat']); ?></td>
                                 <td class="px-6 py-4 text-gray-700"><?php echo htmlspecialchars($candidate['partai_asal']); ?></td>
-                                <td class="px-6 py-4 text-right">
+                                <td class="px-6 py-4 text-right text-sm font-medium">
+                                    <a href="candidate_edit.php?id=<?php echo $candidate['id']; ?>" class="text-indigo-600 hover:text-indigo-900 mr-3">Edit</a>
                                     <a href="candidate_delete_handler.php?id=<?php echo $candidate['id']; ?>&event_id=<?php echo $event_id; ?>" onclick="return confirm('Anda yakin ingin menghapus kandidat ini?')" class="text-red-600 hover:text-red-900">Hapus</a>
                                 </td>
                             </tr>
