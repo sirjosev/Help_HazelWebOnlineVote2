@@ -10,8 +10,9 @@ Selamat datang di dokumentasi resmi Proyek E-Voting. Proyek ini adalah sebuah pl
 ## ✨ Fitur Utama
 
 * **Dua Peran Pengguna:** Sistem membedakan akses dan fungsionalitas antara **Admin** dan **Voter**.
-* **Manajemen Event Dinamis:** Admin dapat membuat, mengelola, dan menghapus event pemilihan (misal: Pilpres, Pilgub) secara penuh.
-* **Manajemen Kandidat:** Admin dapat menambahkan kandidat lengkap dengan nomor urut, partai, dan foto untuk setiap event.
+* **Manajemen Event Dinamis:** Admin dapat membuat, mengedit, dan menghapus event pemilihan (misal: Pilpres, Pilgub) secara penuh.
+* **Manajemen Kandidat Lengkap:** Admin dapat menambah, mengedit, dan menghapus kandidat lengkap dengan nomor urut, partai, dan foto untuk setiap event.
+* **Input Data Terstandardisasi:** Penggunaan dropdown untuk isian krusial seperti domisili, posisi jabatan, dan wilayah pemilihan untuk menjaga konsistensi data.
 * **Dashboard Voter Terpersonalisasi:** Voter hanya akan melihat event pemilihan yang relevan dengan domisili mereka atau yang berskala nasional.
 * **Sistem Voting Aman:** Mekanisme "satu orang, satu suara" per event dijamin melalui validasi di level database.
 * **Quick Count Real-time:** Halaman utama menampilkan hasil hitung cepat yang dapat diakses oleh publik dan diperbarui secara otomatis.
@@ -215,7 +216,5 @@ Ikuti langkah-langkah ini untuk menjalankan proyek di lingkungan lokal menggunak
 * **Admin**
     * Memiliki semua hak akses Voter.
     * Mengakses dashboard admin khusus.
-    * Membuat event pemilihan baru dengan menentukan nama, jabatan, wilayah, dan jadwal.
-    * Melihat semua event yang pernah dibuat.
-    * Menghapus event (dengan konfirmasi pengetikan ulang nama event).
-    * Menambah dan menghapus kandidat untuk setiap event.
+    * **CRUD Event:** Membuat, Melihat, Mengedit, dan Menghapus event pemilihan.
+    * **CRUD Kandidat:** Menambah, Mengedit, dan Menghapus kandidat untuk setiap event.
