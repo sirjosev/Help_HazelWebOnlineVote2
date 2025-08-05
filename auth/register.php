@@ -2,6 +2,8 @@
 // File: auth/register.php
 // Halaman ini berisi formulir HTML untuk pendaftaran pengguna baru.
 session_start();
+// Memuat opsi dropdown
+require_once '../config/options.php';
 ?>
 <!DOCTYPE html>
 <html lang="id">
@@ -57,10 +59,13 @@ session_start();
                        placeholder="Buat password yang kuat">
             </div>
             <div class="mb-6">
-                <label for="domisili" class="block text-gray-700 text-sm font-bold mb-2">Domisili (Kota/Kabupaten)</label>
-                <input type="text" id="domisili" name="domisili" required
-                       class="shadow-sm appearance-none border rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                       placeholder="Contoh: Jakarta, Surabaya, Bandung">
+                <label for="domisili" class="block text-gray-700 text-sm font-bold mb-2">Domisili (Provinsi)</label>
+                <select id="domisili" name="domisili" required class="shadow-sm appearance-none border rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    <option value="" disabled selected>Pilih Provinsi Anda</option>
+                    <?php foreach ($provinsi_options as $provinsi): ?>
+                        <option value="<?php echo htmlspecialchars($provinsi); ?>"><?php echo htmlspecialchars($provinsi); ?></option>
+                    <?php endforeach; ?>
+                </select>
             </div>
             <div class="flex items-center justify-between">
                 <button type="submit"
