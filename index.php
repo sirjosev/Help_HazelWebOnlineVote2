@@ -79,11 +79,11 @@
                 // --- BAGIAN UNTUK KONEKSI KE BACKEND ---
                 // Mengambil data langsung dari API quick count.
                 const response = await fetch('api/quick_count.php');
-                
+
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
-                
+
                 const data = await response.json();
                 // -----------------------------------------
 
