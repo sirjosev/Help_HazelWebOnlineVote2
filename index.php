@@ -114,7 +114,8 @@
                 // Membuat HTML untuk setiap kandidat
                 const candidatesHtml = event.candidates.map(candidate => {
                     const percentage = totalVotes > 0 ? ((candidate.votes / totalVotes) * 100).toFixed(2) : 0;
-                    const imageUrl = `assets/images/${candidate.image || 'placeholder.png'}`;
+                    // API sekarang menyediakan URL lengkap
+                    const imageUrl = candidate.image;
                     return `
                         <div class="mb-4">
                              <img src="${imageUrl}" alt="${candidate.name}" class="w-full aspect-[16/9] rounded-lg object-cover mb-3 shadow-sm border">

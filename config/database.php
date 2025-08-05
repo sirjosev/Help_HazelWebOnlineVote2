@@ -22,4 +22,7 @@ if ($conn->connect_error) {
 // Set charset ke utf8mb4 untuk mendukung berbagai karakter
 $conn->set_charset("utf8mb4");
 
+// --- Base URL Konfigurasi ---
+// Definisikan path dasar aplikasi. Sesuaikan jika nama direktori berubah.
+$base_url = '/Help_HazelWebOnlineVote2/';
 ?>
