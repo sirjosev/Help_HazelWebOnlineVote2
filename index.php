@@ -77,16 +77,17 @@
         async function fetchQuickCountData() {
             try {
                 // --- BAGIAN UNTUK KONEKSI KE BACKEND ---
-                // Di dunia nyata, Anda akan memanggil API PHP Anda di sini.
-                // const response = await fetch('/api/quick_count.php');
-                // const data = await response.json();
+                // Mengambil data langsung dari API quick count.
+                const response = await fetch('api/quick_count.php');
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
                 // -----------------------------------------
 
-                // Untuk tujuan demonstrasi, kita gunakan data tiruan (mock data).
-                // Ganti ini dengan fetch asli saat backend siap.
-                const mockData = getMockData();
-
-                updateUI(mockData);
+                updateUI(data);
 
             } catch (error) {
                 console.error('Gagal mengambil data quick count:', error);
@@ -147,43 +148,6 @@
             });
         }
 
-        /**
-         * Fungsi ini menghasilkan data tiruan untuk simulasi.
-         * Di aplikasi nyata, data ini berasal dari query database di `quick_count.php`.
-         */
-        function getMockData() {
-            // Simulasi penambahan suara secara acak
-            const randomIncrement = () => Math.floor(Math.random() * 100);
-
-            return [
-                {
-                    eventName: "Pemilihan Presiden & Wakil Presiden",
-                    position: "Republik Indonesia",
-                    candidates: [
-                        { name: "Kandidat A & Wakil A", votes: 45210 + randomIncrement() },
-                        { name: "Kandidat B & Wakil B", votes: 51340 + randomIncrement() },
-                        { name: "Kandidat C & Wakil C", votes: 31870 + randomIncrement() }
-                    ]
-                },
-                {
-                    eventName: "Pemilihan Gubernur Jawa Barat",
-                    position: "Provinsi Jawa Barat",
-                    candidates: [
-                        { name: "Cagub 1", votes: 12543 + randomIncrement() },
-                        { name: "Cagub 2", votes: 9876 + randomIncrement() }
-                    ]
-                },
-                {
-                    eventName: "Pemilihan Anggota DPR Kaltim",
-                    position: "Dapil Kalimantan Timur",
-                    candidates: [
-                        { name: "Caleg Partai X", votes: 7654 + randomIncrement() },
-                        { name: "Caleg Partai Y", votes: 8123 + randomIncrement() },
-                        { name: "Caleg Partai Z", votes: 6543 + randomIncrement() }
-                    ]
-                }
-            ];
-        }
 
         // --- INISIALISASI ---
         // Panggil fungsi untuk pertama kali saat halaman dimuat
