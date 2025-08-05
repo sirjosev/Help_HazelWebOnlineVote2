@@ -22,7 +22,7 @@ session_destroy();
 
 // Arahkan pengguna kembali ke halaman utama (landing page)
 // Menggunakan path absolut dari root web server untuk kejelasan
-$root_path = '/'; // Sesuaikan jika aplikasi berada di subdirektori
+$root_path = '/Help_HazelWebOnlineVote2/'; // Sesuaikan jika aplikasi berada di subdirektori
 header("Location: " . $root_path . "index.php");
 exit;
 ?>
