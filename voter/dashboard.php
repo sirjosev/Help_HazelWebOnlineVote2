@@ -16,8 +16,11 @@ $voter_id = $_SESSION['user_id'];
 $voter_domisili = $_SESSION['domisili'];
 
 // Ambil event yang sesuai dengan domisili voter ATAU event berskala Nasional.
-// Juga, ambil status apakah voter sudah pernah vote di event tersebut.
-$sql = "SELECT e.*, (SELECT COUNT(*) FROM votes v WHERE v.event_id = e.id AND v.voter_id = ?) AS sudah_vote
+// Juga, ambil status apakah voter sudah pernah vote dan jumlah kandidat.
+$sql = "SELECT
+            e.*,
+            (SELECT COUNT(*) FROM votes v WHERE v.event_id = e.id AND v.voter_id = ?) AS sudah_vote,
+            (SELECT COUNT(*) FROM candidates c WHERE c.event_id = e.id) AS jumlah_kandidat
         FROM events e 
         WHERE e.wilayah = ? OR e.wilayah = 'Nasional'
         ORDER BY e.waktu_mulai DESC";
@@ -82,11 +85,13 @@ $result = $stmt->get_result();
                         </div>
                         <div class="mt-4">
                             <?php if ($event['sudah_vote'] > 0): ?>
-                                <button disabled class="w-full bg-gray-300 text-gray-500 font-bold py-2 px-4 rounded-lg cursor-not-allowed">Anda Sudah Memilih</button>
-                            <?php elseif ($is_active): ?>
-                                <a href="event_detail.php?id=<?php echo $event['id']; ?>" class="block text-center w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg">Lihat & Pilih Kandidat</a>
+                                <button disabled class="w-full bg-green-200 text-green-800 font-bold py-2 px-4 rounded-lg cursor-not-allowed">✔ Anda Sudah Memilih</button>
+                            <?php elseif (!$is_active): ?>
+                                <button disabled class="w-full bg-gray-300 text-gray-600 font-bold py-2 px-4 rounded-lg cursor-not-allowed">Voting Belum/Sudah Selesai</button>
+                            <?php elseif ($event['jumlah_kandidat'] == 0): ?>
+                                <button disabled class="w-full bg-yellow-200 text-yellow-800 font-bold py-2 px-4 rounded-lg cursor-not-allowed">Kandidat Belum Tersedia</button>
                             <?php else: ?>
-                                <button disabled class="w-full bg-gray-300 text-gray-500 font-bold py-2 px-4 rounded-lg cursor-not-allowed">Voting Belum Dibuka/Sudah Ditutup</button>
+                                <a href="event_detail.php?id=<?php echo $event['id']; ?>" class="block text-center w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg transition-colors">Lihat & Pilih Kandidat</a>
                             <?php endif; ?>
                         </div>
                     </div>
