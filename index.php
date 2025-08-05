@@ -117,15 +117,13 @@
                     const imageUrl = `assets/images/${candidate.image || 'placeholder.png'}`;
                     return `
                         <div class="mb-4">
-                            <div class="flex justify-between items-center mb-2">
-                                <div class="flex items-center">
-                                    <img src="${imageUrl}" alt="${candidate.name}" class="h-8 w-8 rounded-full object-cover mr-3">
-                                    <span class="font-semibold text-gray-700">${candidate.name}</span>
-                                </div>
+                             <img src="${imageUrl}" alt="${candidate.name}" class="w-full aspect-[16/9] rounded-lg object-cover mb-3 shadow-sm border">
+                            <div class="flex justify-between items-center mb-1">
+                                <span class="font-semibold text-gray-700">${candidate.name}</span>
                                 <span class="text-sm font-bold text-gray-800">${percentage}%</span>
                             </div>
-                            <div class="w-full bg-gray-200 rounded-full h-6">
-                                <div class="bg-indigo-600 h-6 rounded-full text-white text-xs font-medium flex items-center justify-center progress-bar-inner" style="width: ${percentage}%">
+                            <div class="w-full bg-gray-200 rounded-full h-5">
+                                <div class="bg-indigo-600 h-5 rounded-full text-white text-xs font-medium flex items-center justify-center progress-bar-inner" style="width: ${percentage}%">
                                    ${candidate.votes.toLocaleString('id-ID')} Suara
                                 </div>
                             </div>
