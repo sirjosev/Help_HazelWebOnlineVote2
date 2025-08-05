@@ -84,7 +84,17 @@ $waktu_selesai = date('Y-m-d\TH:i', strtotime($event['waktu_selesai']));
                     </div>
                     <div>
                         <label for="wilayah" class="block text-sm font-medium text-gray-700">Wilayah Pemilihan</label>
-                        <input type="text" name="wilayah" id="wilayah" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-2" value="<?php echo htmlspecialchars($event['wilayah']); ?>">
+                        <select name="wilayah" id="wilayah" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-2">
+                            <option value="Nasional" <?php echo ($event['wilayah'] === 'Nasional') ? 'selected' : ''; ?>>Nasional (Contoh: Pilpres)</option>
+                            <optgroup label="Provinsi">
+                                <?php foreach ($provinsi_options as $provinsi): ?>
+                                    <option value="<?php echo htmlspecialchars($provinsi); ?>" <?php echo ($event['wilayah'] === $provinsi) ? 'selected' : ''; ?>>
+                                        <?php echo htmlspecialchars($provinsi); ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </optgroup>
+                        </select>
+                        <p class="text-xs text-gray-500 mt-1">Pilih "Nasional" untuk pemilihan tingkat nasional.</p>
                     </div>
                     <div>
                         <label for="deskripsi" class="block text-sm font-medium text-gray-700">Deskripsi Singkat</label>
