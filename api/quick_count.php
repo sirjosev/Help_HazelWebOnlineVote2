@@ -35,10 +35,11 @@ if ($events_result->num_rows > 0) {
         $candidates_result = $stmt->get_result();
 
         while ($candidate = $candidates_result->fetch_assoc()) {
+            $image_name = $candidate['foto_kandidat'] ?: 'placeholder.png';
             $event_data['candidates'][] = [
                 'name' => $candidate['nama_kandidat'],
                 'votes' => (int)$candidate['votes'],
-                'image' => $candidate['foto_kandidat']
+                'image' => $base_url . 'assets/images/' . $image_name
             ];
         }
         $stmt->close();
