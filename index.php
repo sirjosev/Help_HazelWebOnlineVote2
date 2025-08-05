@@ -114,10 +114,14 @@
                 // Membuat HTML untuk setiap kandidat
                 const candidatesHtml = event.candidates.map(candidate => {
                     const percentage = totalVotes > 0 ? ((candidate.votes / totalVotes) * 100).toFixed(2) : 0;
+                    const imageUrl = `assets/images/${candidate.image || 'placeholder.png'}`;
                     return `
                         <div class="mb-4">
-                            <div class="flex justify-between items-center mb-1">
-                                <span class="font-semibold text-gray-700">${candidate.name}</span>
+                            <div class="flex justify-between items-center mb-2">
+                                <div class="flex items-center">
+                                    <img src="${imageUrl}" alt="${candidate.name}" class="h-8 w-8 rounded-full object-cover mr-3">
+                                    <span class="font-semibold text-gray-700">${candidate.name}</span>
+                                </div>
                                 <span class="text-sm font-bold text-gray-800">${percentage}%</span>
                             </div>
                             <div class="w-full bg-gray-200 rounded-full h-6">

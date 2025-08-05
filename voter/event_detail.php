@@ -59,16 +59,16 @@ $candidates = $stmt_candidates->get_result();
                 <?php while($candidate = $candidates->fetch_assoc()): ?>
                     <label class="block bg-white p-4 rounded-xl shadow-md cursor-pointer hover:ring-2 hover:ring-indigo-200 transition-all duration-200 peer-checked:ring-4 peer-checked:ring-indigo-500 peer-checked:bg-indigo-50">
                         <input type="radio" name="candidate_id" value="<?php echo $candidate['id']; ?>" required class="hidden peer">
-                        <div class="flex items-center">
-                            <div class="flex-shrink-0 h-16 w-16 bg-gray-200 rounded-full flex items-center justify-center text-2xl font-bold text-gray-700 transition-colors peer-checked:bg-indigo-600 peer-checked:text-white">
+                        <div class="flex flex-col sm:flex-row items-center text-center sm:text-left">
+                            <div class="flex-shrink-0 h-16 w-16 bg-gray-200 rounded-full flex items-center justify-center text-2xl font-bold text-gray-700 transition-colors peer-checked:bg-indigo-600 peer-checked:text-white mb-4 sm:mb-0">
                                 <?php echo $candidate['nomor_urut']; ?>
                             </div>
-                            <div class="ml-4">
+                            <div class="ml-0 sm:ml-4 flex-grow">
                                 <p class="text-lg font-semibold text-gray-900 transition-colors peer-checked:text-indigo-800"><?php echo htmlspecialchars($candidate['nama_kandidat']); ?></p>
                                 <p class="text-sm text-gray-500"><?php echo htmlspecialchars($candidate['partai_asal'] ?? 'Independen'); ?></p>
                             </div>
-                            <div class="ml-auto pl-4">
-                                <img src="../assets/images/<?php echo htmlspecialchars($candidate['foto_kandidat'] ?: 'placeholder.png'); ?>" alt="Foto <?php echo htmlspecialchars($candidate['nama_kandidat']); ?>" class="h-16 w-16 rounded-full object-cover">
+                            <div class="ml-0 sm:ml-auto mt-4 sm:mt-0 sm:pl-4">
+                                <img src="../assets/images/<?php echo htmlspecialchars($candidate['foto_kandidat'] ?: 'placeholder.png'); ?>" alt="Foto <?php echo htmlspecialchars($candidate['nama_kandidat']); ?>" class="w-40 aspect-[16/9] rounded-lg object-cover shadow-sm">
                             </div>
                         </div>
                     </label>

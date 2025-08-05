@@ -21,7 +21,7 @@ if ($events_result->num_rows > 0) {
 
         // Untuk setiap event, ambil kandidat dan jumlah suaranya
         $candidates_sql = "
-            SELECT c.id, c.nama_kandidat, COUNT(v.id) AS votes
+            SELECT c.id, c.nama_kandidat, c.foto_kandidat, COUNT(v.id) AS votes
             FROM candidates c
             LEFT JOIN votes v ON c.id = v.candidate_id
             WHERE c.event_id = ?
@@ -37,7 +37,8 @@ if ($events_result->num_rows > 0) {
         while ($candidate = $candidates_result->fetch_assoc()) {
             $event_data['candidates'][] = [
                 'name' => $candidate['nama_kandidat'],
-                'votes' => (int)$candidate['votes']
+                'votes' => (int)$candidate['votes'],
+                'image' => $candidate['foto_kandidat']
             ];
         }
         $stmt->close();
