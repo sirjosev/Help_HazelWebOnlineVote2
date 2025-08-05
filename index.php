@@ -23,10 +23,16 @@
     </style>
 </head>
 <body>
+    <!-- Tombol Aksi di Pojok Kanan Atas -->
+    <div class="absolute top-0 right-0 p-4 md:p-6">
+        <a href="auth/login.php" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg text-sm md:text-base transition-colors duration-300 shadow-md">
+            Login
+        </a>
+    </div>
 
     <div class="container mx-auto p-4 md:p-8">
         <!-- Header -->
-        <header class="text-center mb-10">
+        <header class="text-center mb-10 pt-16 md:pt-12">
             <h1 class="text-4xl md:text-5xl font-extrabold text-gray-800">Sistem E-Voting</h1>
             <p class="text-lg text-gray-600 mt-2">Hasil Hitung Cepat (Quick Count) Pemilihan Umum</p>
             <div class="mt-4 inline-flex items-center">
