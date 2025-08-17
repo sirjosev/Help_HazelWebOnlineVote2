@@ -1,30 +1,51 @@
+<?php
+require_once 'config/database.php';
+
+// Ambil event terbaru yang sedang atau akan berlangsung
+$event_sql = "
+    SELECT id, nama_event, posisi_jabatan, deskripsi
+    FROM events
+    WHERE waktu_selesai > NOW()
+    ORDER BY waktu_mulai ASC
+    LIMIT 1
+";
+$event_result = $conn->query($event_sql);
+$event = $event_result->fetch_assoc();
+
+$candidates = [];
+if ($event) {
+    // Ambil kandidat untuk event tersebut
+    $candidates_sql = "SELECT nama_kandidat, foto_kandidat, visi, misi FROM candidates WHERE event_id = ? ORDER BY nomor_urut ASC";
+    $stmt = $conn->prepare($candidates_sql);
+    $stmt->bind_param("i", $event['id']);
+    $stmt->execute();
+    $candidates_result = $stmt->get_result();
+    while ($row = $candidates_result->fetch_assoc()) {
+        $candidates[] = $row;
+    }
+    $stmt->close();
+}
+
+$conn->close();
+?>
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E-Voting - Hitung Cepat</title>
-    <!-- Memuat Tailwind CSS -->
+    <title>E-Voting - Selamat Datang</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Memuat Google Fonts: Inter -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        /* Menggunakan font Inter sebagai default */
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f0f2f5;
-        }
-        /* Animasi untuk progress bar */
-        .progress-bar-inner {
-            transition: width 0.5s ease-in-out;
-        }
+        body { font-family: 'Inter', sans-serif; background-color: #f0f2f5; }
     </style>
 </head>
 <body>
     <!-- Tombol Aksi di Pojok Kanan Atas -->
-    <div class="absolute top-0 right-0 p-4 md:p-6">
+    <div class="absolute top-0 right-0 p-4 md:p-6 z-10 flex space-x-2">
+        <a href="quick_count.php" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg text-sm md:text-base transition-colors duration-300 shadow-md">
+            Lihat Quick Count
+        </a>
         <a href="auth/login.php" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg text-sm md:text-base transition-colors duration-300 shadow-md">
             Login
         </a>
@@ -34,30 +55,57 @@
         <!-- Header -->
         <header class="text-center mb-10 pt-16 md:pt-12">
             <h1 class="text-4xl md:text-5xl font-extrabold text-gray-800">Sistem E-Voting</h1>
-            <p class="text-lg text-gray-600 mt-2">Hasil Hitung Cepat (Quick Count) Pemilihan Umum</p>
-            <div class="mt-4 inline-flex items-center">
-                <span class="relative flex h-3 w-3">
-                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                  <span class="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
-                </span>
-                <span class="ml-3 font-semibold text-red-600">LIVE</span>
-            </div>
+            <p class="text-lg text-gray-600 mt-2">Kenali Kandidat Anda Sebelum Memilih</p>
         </header>
 
-        <!-- Kontainer untuk semua kartu event pemilihan -->
-        <main id="quick-count-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <!-- Kartu event akan dimuat oleh JavaScript di sini -->
-            <!-- Contoh struktur kartu (akan dihapus dan diganti data live) -->
-            <div class="bg-white p-6 rounded-2xl shadow-lg border border-gray-200 animate-pulse">
-                <div class="h-6 bg-gray-300 rounded w-3/4 mb-2"></div>
-                <div class="h-4 bg-gray-300 rounded w-1/2 mb-6"></div>
-                <div class="space-y-4">
-                    <div class="h-10 bg-gray-300 rounded"></div>
-                    <div class="h-10 bg-gray-300 rounded"></div>
-                    <div class="h-10 bg-gray-300 rounded"></div>
+        <!-- Konten Utama: Visi & Misi Kandidat -->
+        <main>
+            <?php if ($event && !empty($candidates)): ?>
+                <div class="bg-white p-6 md:p-8 rounded-2xl shadow-lg border border-gray-200">
+                    <h2 class="text-2xl md:text-3xl font-bold text-gray-900 text-center"><?php echo htmlspecialchars($event['nama_event']); ?></h2>
+                    <p class="text-md text-gray-600 text-center mb-8"><?php echo htmlspecialchars($event['posisi_jabatan']); ?></p>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-<?php echo count($candidates) > 1 ? '2' : '1'; ?> gap-8">
+                        <?php foreach ($candidates as $candidate): ?>
+                            <div class="border border-gray-200 rounded-xl p-6 hover:shadow-md transition-shadow duration-300">
+                                <div class="flex items-center space-x-4 mb-4">
+                                    <img src="<?php echo $base_url . 'assets/images/' . htmlspecialchars($candidate['foto_kandidat'] ?: 'placeholder.png'); ?>" alt="Foto <?php echo htmlspecialchars($candidate['nama_kandidat']); ?>" class="w-20 h-20 rounded-full object-cover border-2 border-indigo-200">
+                                    <div>
+                                        <h3 class="text-xl font-bold text-gray-800"><?php echo htmlspecialchars($candidate['nama_kandidat']); ?></h3>
+                                    </div>
+                                </div>
+
+                                <div class="space-y-4">
+                                    <div>
+                                        <h4 class="font-semibold text-lg text-gray-700 border-b pb-1 mb-2">Visi</h4>
+                                        <p class="text-gray-600 text-sm"><?php echo nl2br(htmlspecialchars($candidate['visi'] ?? 'Visi belum tersedia.')); ?></p>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold text-lg text-gray-700 border-b pb-1 mb-2">Misi</h4>
+                                        <ul class="list-disc list-inside text-gray-600 text-sm space-y-1">
+                                            <?php
+                                            if (!empty($candidate['misi'])) {
+                                                $misi_items = explode(',', htmlspecialchars($candidate['misi']));
+                                                foreach ($misi_items as $item) {
+                                                    echo '<li>' . trim($item) . '</li>';
+                                                }
+                                            } else {
+                                                echo '<li>Misi belum tersedia.</li>';
+                                            }
+                                            ?>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
                 </div>
-                <div class="h-4 bg-gray-300 rounded w-1/3 mt-6 ml-auto"></div>
-            </div>
+            <?php else: ?>
+                <div class="text-center bg-white p-10 rounded-2xl shadow-lg">
+                    <h2 class="text-2xl font-bold text-gray-700">Belum Ada Event Pemilihan Aktif</h2>
+                    <p class="text-gray-500 mt-2">Saat ini belum ada event pemilihan yang akan datang atau sedang berlangsung. Silakan cek kembali nanti.</p>
+                </div>
+            <?php endif; ?>
         </main>
 
         <!-- Footer -->
@@ -65,102 +113,5 @@
             <p>&copy; 2024 Proyek E-Voting. Dibuat dengan semangat transparansi.</p>
         </footer>
     </div>
-
-    <script>
-        // Elemen kontainer untuk menampung kartu-kartu quick count
-        const container = document.getElementById('quick-count-container');
-
-        /**
-         * Fungsi untuk mengambil data quick count dari backend API.
-         * Secara periodik, fungsi ini akan dipanggil untuk memperbarui tampilan.
-         */
-        async function fetchQuickCountData() {
-            try {
-                // --- BAGIAN UNTUK KONEKSI KE BACKEND ---
-                // Mengambil data langsung dari API quick count.
-                const response = await fetch('api/quick_count.php');
-
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-
-                const data = await response.json();
-                // -----------------------------------------
-
-                updateUI(data);
-
-            } catch (error) {
-                console.error('Gagal mengambil data quick count:', error);
-                container.innerHTML = `<p class="text-center text-red-500 col-span-full">Tidak dapat memuat data. Silakan coba lagi nanti.</p>`;
-            }
-        }
-
-        /**
-         * Fungsi untuk memperbarui tampilan (UI) berdasarkan data yang diterima.
-         * @param {Array} events - Array berisi objek-objek event pemilihan.
-         */
-        function updateUI(events) {
-            // Kosongkan kontainer sebelum mengisi dengan data baru
-            container.innerHTML = '';
-
-            if (!events || events.length === 0) {
-                container.innerHTML = `<p class="text-center text-gray-600 col-span-full">Belum ada event pemilihan yang berlangsung.</p>`;
-                return;
-            }
-
-            events.forEach(event => {
-                const totalVotes = event.candidates.reduce((sum, candidate) => sum + candidate.votes, 0);
-
-                // Membuat HTML untuk setiap kandidat
-                const candidatesHtml = event.candidates.map(candidate => {
-                    const percentage = totalVotes > 0 ? ((candidate.votes / totalVotes) * 100).toFixed(2) : 0;
-                    // API sekarang menyediakan URL lengkap
-                    const imageUrl = candidate.image;
-                    return `
-                        <div class="mb-4">
-                             <img src="${imageUrl}" alt="${candidate.name}" class="w-full aspect-[16/9] rounded-lg object-cover mb-3 shadow-sm border">
-                            <div class="flex justify-between items-center mb-1">
-                                <span class="font-semibold text-gray-700">${candidate.name}</span>
-                                <span class="text-sm font-bold text-gray-800">${percentage}%</span>
-                            </div>
-                            <div class="w-full bg-gray-200 rounded-full h-5">
-                                <div class="bg-indigo-600 h-5 rounded-full text-white text-xs font-medium flex items-center justify-center progress-bar-inner" style="width: ${percentage}%">
-                                   ${candidate.votes.toLocaleString('id-ID')} Suara
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                }).join('');
-
-                // Membuat kartu event
-                const eventCard = `
-                    <div class="bg-white p-6 rounded-2xl shadow-lg border border-gray-200 transform hover:-translate-y-1 transition-transform duration-300">
-                        <h2 class="text-xl font-bold text-gray-900">${event.eventName}</h2>
-                        <p class="text-sm text-gray-500 mb-6">${event.position}</p>
-                        <div>
-                            ${candidatesHtml}
-                        </div>
-                        <div class="text-right mt-4 text-sm text-gray-600 font-medium">
-                            Total Suara Masuk: <span class="font-bold">${totalVotes.toLocaleString('id-ID')}</span>
-                        </div>
-                    </div>
-                `;
-
-                // Menambahkan kartu ke kontainer
-                container.innerHTML += eventCard;
-            });
-        }
-
-
-        // --- INISIALISASI ---
-        // Panggil fungsi untuk pertama kali saat halaman dimuat
-        document.addEventListener('DOMContentLoaded', () => {
-            fetchQuickCountData();
-
-            // Atur interval untuk memperbarui data setiap 5 detik (5000 ms)
-            setInterval(fetchQuickCountData, 5000);
-        });
-    </script>
-
 </body>
 </html>
