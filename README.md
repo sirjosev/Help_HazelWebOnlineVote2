@@ -11,11 +11,11 @@ Selamat datang di dokumentasi resmi Proyek E-Voting. Proyek ini adalah sebuah pl
 
 * **Dua Peran Pengguna:** Sistem membedakan akses dan fungsionalitas antara **Admin** dan **Voter**.
 * **Manajemen Event Dinamis:** Admin dapat membuat, mengedit, dan menghapus event pemilihan (misal: Pilpres, Pilgub) secara penuh.
-* **Manajemen Kandidat Lengkap:** Admin dapat menambah, mengedit, dan menghapus kandidat lengkap dengan nomor urut, partai, dan foto untuk setiap event.
-* **Input Data Terstandardisasi:** Penggunaan dropdown untuk isian krusial seperti domisili, posisi jabatan, dan wilayah pemilihan untuk menjaga konsistensi data.
+* **Manajemen Kandidat Lengkap:** Admin dapat menambah, mengedit, dan menghapus kandidat lengkap dengan nomor urut, partai, foto, visi, misi, dan materi kampanye.
+* **Halaman Utama Informatif:** Halaman utama menampilkan visi dan misi kandidat dari event pemilihan terdekat untuk edukasi pemilih.
 * **Dashboard Voter Terpersonalisasi:** Voter hanya akan melihat event pemilihan yang relevan dengan domisili mereka atau yang berskala nasional.
 * **Sistem Voting Aman:** Mekanisme "satu orang, satu suara" per event dijamin melalui validasi di level database.
-* **Quick Count Real-time:** Halaman utama menampilkan hasil hitung cepat yang dapat diakses oleh publik dan diperbarui secara otomatis.
+* **Halaman Quick Count Terpisah:** Hasil hitung cepat *real-time* kini tersedia di halaman khusus untuk menjaga fokus dan transparansi.
 * **Keamanan Konfirmasi:** Admin harus mengetik ulang nama event sebelum menghapusnya untuk mencegah kesalahan.
 
 ---
@@ -68,7 +68,8 @@ Berikut adalah struktur folder final dari proyek ini untuk memastikan kode tetap
 │   ├── js/
 │   └── images/
 │
-└── index.php
+├── index.php
+└── quick_count.php
 ```
 
 ---
@@ -78,8 +79,10 @@ Flowchart ini menggambarkan alur yang dialami oleh pengguna, mulai dari halaman 
 
 ```mermaid
 graph TD
-    A[Pengguna Mengakses Web] --> B{Halaman Utama / Quick Count};
-    B --> C{Klik Tombol Login/Register};
+    A[Pengguna Mengakses Web] --> B{Halaman Utama / Visi Misi};
+    B --> B1[Lihat Quick Count];
+    B1 --> B2[Halaman Quick Count];
+    B --> C{Klik Tombol Login};
     C --> D[Halaman Login];
     D --> E{Input Email & Password};
     E --> F[auth/login_handler.php];
@@ -142,7 +145,9 @@ CREATE TABLE `candidates` (
   `partai_asal` VARCHAR(100),
   `nomor_urut` INT NOT NULL,
   `foto_kandidat` VARCHAR(255),
-  `visi_misi` TEXT,
+  `visi` TEXT,
+  `misi` TEXT,
+  `materi_kampanye` VARCHAR(255),
   FOREIGN KEY (`event_id`) REFERENCES `events`(`id`) ON DELETE CASCADE
 );
 

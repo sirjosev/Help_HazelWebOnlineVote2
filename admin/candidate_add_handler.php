@@ -8,6 +8,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $nama_kandidat = $_POST['nama_kandidat'];
     $partai_asal = $_POST['partai_asal'];
     $nomor_urut = $_POST['nomor_urut'];
+    $visi = $_POST['visi'] ?? '';
+    $misi = $_POST['misi'] ?? '';
+    $materi_kampanye = $_POST['materi_kampanye'] ?? '';
     $foto_kandidat_name = 'placeholder.png'; // Default image
 
     // Handle file upload
@@ -24,9 +27,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
 
-    $sql = "INSERT INTO candidates (event_id, nama_kandidat, partai_asal, nomor_urut, foto_kandidat) VALUES (?, ?, ?, ?, ?)";
+    $sql = "INSERT INTO candidates (event_id, nama_kandidat, partai_asal, nomor_urut, foto_kandidat, visi, misi, materi_kampanye) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("issis", $event_id, $nama_kandidat, $partai_asal, $nomor_urut, $foto_kandidat_name);
+    $stmt->bind_param("ississss", $event_id, $nama_kandidat, $partai_asal, $nomor_urut, $foto_kandidat_name, $visi, $misi, $materi_kampanye);
     
     $stmt->execute();
     $stmt->close();
