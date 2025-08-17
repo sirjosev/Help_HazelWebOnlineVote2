@@ -19,6 +19,9 @@ $event_id = $_POST['event_id']; // Penting untuk redirect kembali
 $nama_kandidat = $_POST['nama_kandidat'];
 $partai_asal = $_POST['partai_asal'];
 $nomor_urut = $_POST['nomor_urut'];
+$visi = $_POST['visi'] ?? '';
+$misi = $_POST['misi'] ?? '';
+$materi_kampanye = $_POST['materi_kampanye'] ?? '';
 $current_photo = $_POST['current_photo'];
 $foto_kandidat_name = $current_photo; // Default ke foto yang sudah ada
 
@@ -42,9 +45,9 @@ if (isset($_FILES['foto_kandidat']) && $_FILES['foto_kandidat']['error'] == 0) {
 }
 
 // --- Update Database ---
-$sql = "UPDATE candidates SET nama_kandidat = ?, partai_asal = ?, nomor_urut = ?, foto_kandidat = ? WHERE id = ?";
+$sql = "UPDATE candidates SET nama_kandidat = ?, partai_asal = ?, nomor_urut = ?, foto_kandidat = ?, visi = ?, misi = ?, materi_kampanye = ? WHERE id = ?";
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("ssisi", $nama_kandidat, $partai_asal, $nomor_urut, $foto_kandidat_name, $candidate_id);
+$stmt->bind_param("ssissssi", $nama_kandidat, $partai_asal, $nomor_urut, $foto_kandidat_name, $visi, $misi, $materi_kampanye, $candidate_id);
 $stmt->execute();
 
 if ($stmt->affected_rows > 0) {

@@ -71,6 +71,34 @@ $candidates = $stmt_candidates->get_result();
                                 <img src="<?php echo $base_url . 'assets/images/' . htmlspecialchars($candidate['foto_kandidat'] ?: 'placeholder.png'); ?>" alt="Foto <?php echo htmlspecialchars($candidate['nama_kandidat']); ?>" class="w-48 h-auto aspect-[16/9] rounded-lg object-cover shadow-md border">
                             </div>
                         </div>
+                        <div class="mt-4 pt-4 border-t border-gray-200">
+                            <details>
+                                <summary class="font-semibold text-indigo-600 cursor-pointer">Lihat Visi, Misi & Materi Kampanye</summary>
+                                <div class="mt-2 text-sm text-gray-700 space-y-3">
+                                    <div>
+                                        <h4 class="font-bold">Visi:</h4>
+                                        <p><?php echo nl2br(htmlspecialchars($candidate['visi'] ?? 'Belum ada visi.')); ?></p>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-bold">Misi:</h4>
+                                        <ul class="list-disc list-inside">
+                                            <?php
+                                            $misi_items = !empty($candidate['misi']) ? explode(',', htmlspecialchars($candidate['misi'])) : ['Belum ada misi.'];
+                                            foreach ($misi_items as $item) {
+                                                echo '<li>' . trim($item) . '</li>';
+                                            }
+                                            ?>
+                                        </ul>
+                                    </div>
+                                    <?php if (!empty($candidate['materi_kampanye'])): ?>
+                                    <div>
+                                        <h4 class="font-bold">Materi Kampanye:</h4>
+                                        <a href="<?php echo htmlspecialchars($candidate['materi_kampanye']); ?>" target="_blank" class="text-indigo-500 hover:underline">Lihat Materi</a>
+                                    </div>
+                                    <?php endif; ?>
+                                </div>
+                            </details>
+                        </div>
                     </label>
                 <?php endwhile; ?>
             </div>

@@ -71,6 +71,11 @@ $candidates_result = $stmt_candidates->get_result();
                     <input name="partai_asal" class="border p-2 rounded-md" placeholder="Partai Asal (Opsional)">
                     <input type="number" name="nomor_urut" required class="border p-2 rounded-md" placeholder="No. Urut">
                 </div>
+                <div class="mt-4 grid grid-cols-1 gap-4">
+                    <textarea name="visi" class="border p-2 rounded-md" placeholder="Visi Kandidat"></textarea>
+                    <textarea name="misi" class="border p-2 rounded-md" placeholder="Misi Kandidat (pisahkan dengan koma)"></textarea>
+                    <textarea name="materi_kampanye" class="border p-2 rounded-md" placeholder="Materi Kampanye (URL/Link)"></textarea>
+                </div>
                 <div class="mt-4">
                      <label for="foto" class="block text-sm font-medium text-gray-700">Foto Kandidat</label>
                      <input type="file" name="foto_kandidat" id="foto" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">

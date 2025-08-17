@@ -65,6 +65,18 @@ if (!$candidate) {
                         <label for="nomor_urut" class="block text-sm font-medium text-gray-700">Nomor Urut</label>
                         <input type="number" name="nomor_urut" id="nomor_urut" value="<?php echo $candidate['nomor_urut']; ?>" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm p-2">
                     </div>
+                     <div>
+                        <label for="visi" class="block text-sm font-medium text-gray-700">Visi</label>
+                        <textarea name="visi" id="visi" rows="3" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm p-2"><?php echo htmlspecialchars($candidate['visi'] ?? ''); ?></textarea>
+                    </div>
+                    <div>
+                        <label for="misi" class="block text-sm font-medium text-gray-700">Misi (pisahkan dengan koma)</label>
+                        <textarea name="misi" id="misi" rows="3" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm p-2"><?php echo htmlspecialchars($candidate['misi'] ?? ''); ?></textarea>
+                    </div>
+                    <div>
+                        <label for="materi_kampanye" class="block text-sm font-medium text-gray-700">Materi Kampanye (URL/Link)</label>
+                        <input type="text" name="materi_kampanye" id="materi_kampanye" value="<?php echo htmlspecialchars($candidate['materi_kampanye'] ?? ''); ?>" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm p-2">
+                    </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700">Foto Saat Ini</label>
                         <img src="<?php echo $base_url . 'assets/images/' . htmlspecialchars($candidate['foto_kandidat'] ?: 'placeholder.png'); ?>" alt="Foto saat ini" class="mt-2 h-24 w-auto rounded-md">
