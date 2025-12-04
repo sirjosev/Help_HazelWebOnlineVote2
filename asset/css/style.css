@@ -1,13 +1,47 @@
 /* Global Batik Background Style */
 body {
     font-family: 'Inter', sans-serif;
-    /* Gradient overlay + Batik pattern */
-    background-image: 
-        linear-gradient(to bottom right, rgba(248, 250, 252, 0.92), rgba(241, 245, 249, 0.92)),
-        url('https://www.transparenttextures.com/patterns/batik.png'); /* Subtle batik texture pattern */
-    background-repeat: repeat;
-    background-attachment: fixed; /* Parallax-like effect */
     color: #1f2937;
+    position: relative;
+    min-height: 100vh;
+}
+
+/* Pseudo-element for the background image with filters */
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+
+    /* The Batik Image */
+    background-image: url('../images/batik_bg.png');
+    background-repeat: repeat;
+    background-size: 400px;
+    /* Adjust size as needed */
+
+    /* Filters to make it "putih abu abu" (grayscale & subtle) */
+    filter: grayscale(100%) opacity(0.15) brightness(1.2);
+}
+
+/* Gradient overlay on top of the image (optional, or part of body background) */
+body::after {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -2;
+    /* Behind the image? No, image should be blended. */
+    /* Actually, let's put a solid/gradient background on the body itself behind the pseudo-element */
+}
+
+body {
+    /* Base background color */
+    background: linear-gradient(to bottom right, #f8fafc, #e2e8f0);
 }
 
 /* Ensure content is readable */
