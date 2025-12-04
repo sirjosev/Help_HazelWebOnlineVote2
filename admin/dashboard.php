@@ -32,6 +32,7 @@ $result = $conn->query($sql);
     <title>Admin Dashboard - E-Voting</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../asset/css/style.css">
     <style>
         body { font-family: 'Inter', sans-serif; background-color: #f9fafb; }
         .modal { display: none; }

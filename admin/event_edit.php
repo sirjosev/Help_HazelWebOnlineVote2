@@ -46,6 +46,7 @@ $waktu_selesai = date('Y-m-d\TH:i', strtotime($event['waktu_selesai']));
     <title>Edit Event - <?php echo htmlspecialchars($event['nama_event']); ?></title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../asset/css/style.css">
     <style> body { font-family: 'Inter', sans-serif; } </style>
 </head>
 <body class="bg-gray-100">
