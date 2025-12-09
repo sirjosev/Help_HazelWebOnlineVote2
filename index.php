@@ -32,9 +32,7 @@ require_once 'config/database.php';
             <div class="hidden md:flex space-x-8">
                 <a href="index.php" class="text-indigo-700 font-bold transition">Beranda</a>
                 <a href="voting.php" class="text-gray-600 hover:text-indigo-700 font-medium transition">E-Voting</a>
-                <a href="#" class="text-gray-600 hover:text-indigo-700 font-medium transition">Layanan</a>
-                <a href="#" class="text-gray-600 hover:text-indigo-700 font-medium transition">Berita</a>
-                <a href="#" class="text-gray-600 hover:text-indigo-700 font-medium transition">Karir</a>
+                <a href="berita.php" class="text-gray-600 hover:text-indigo-700 font-medium transition">Berita</a>
             </div>
             <div class="flex space-x-3">
                 <a href="auth/login.php" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-5 rounded-lg text-sm transition shadow-md">
