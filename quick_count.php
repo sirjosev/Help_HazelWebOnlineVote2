@@ -6,6 +6,8 @@
     <title>E-Voting - Hitung Cepat</title>
     <!-- Memuat Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Memuat Chart.js untuk Pie Chart -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- Memuat Google Fonts: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -17,9 +19,24 @@
             font-family: 'Inter', sans-serif;
             background-color: #f0f2f5;
         }
-        /* Animasi untuk progress bar */
-        .progress-bar-inner {
-            transition: width 0.5s ease-in-out;
+        /* Styling untuk pie chart container */
+        .chart-container {
+            position: relative;
+            max-width: 280px;
+            margin: 0 auto;
+        }
+        /* Legend styling */
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+        .legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 4px;
+            flex-shrink: 0;
         }
     </style>
 </head>
@@ -96,6 +113,23 @@
             }
         }
 
+        // Menyimpan instance chart untuk update
+        const chartInstances = {};
+
+        // Warna-warna untuk pie chart
+        const chartColors = [
+            '#6366f1', // Indigo
+            '#f43f5e', // Rose
+            '#10b981', // Emerald
+            '#f59e0b', // Amber
+            '#8b5cf6', // Violet
+            '#06b6d4', // Cyan
+            '#ec4899', // Pink
+            '#84cc16', // Lime
+            '#3b82f6', // Blue
+            '#ef4444'  // Red
+        ];
+
         /**
          * Fungsi untuk memperbarui tampilan (UI) berdasarkan data yang diterima.
          * @param {Array} events - Array berisi objek-objek event pemilihan.
@@ -104,51 +138,111 @@
             // Kosongkan kontainer sebelum mengisi dengan data baru
             container.innerHTML = '';
 
+            // Destroy existing chart instances
+            Object.values(chartInstances).forEach(chart => chart.destroy());
+            Object.keys(chartInstances).forEach(key => delete chartInstances[key]);
+
             if (!events || events.length === 0) {
                 container.innerHTML = `<p class="text-center text-gray-600 col-span-full">Belum ada event pemilihan yang berlangsung.</p>`;
                 return;
             }
 
-            events.forEach(event => {
+            events.forEach((event, eventIndex) => {
                 const totalVotes = event.candidates.reduce((sum, candidate) => sum + candidate.votes, 0);
+                const chartId = `pie-chart-${eventIndex}`;
 
-                // Membuat HTML untuk setiap kandidat
-                const candidatesHtml = event.candidates.map(candidate => {
-                    const percentage = totalVotes > 0 ? ((candidate.votes / totalVotes) * 100).toFixed(2) : 0;
-                    // API sekarang menyediakan URL lengkap
-                    const imageUrl = candidate.image;
+                // Membuat legend untuk setiap kandidat
+                const legendHtml = event.candidates.map((candidate, index) => {
+                    const percentage = totalVotes > 0 ? ((candidate.votes / totalVotes) * 100).toFixed(1) : 0;
+                    const color = chartColors[index % chartColors.length];
                     return `
-                        <div class="mb-4">
-                             <img src="${imageUrl}" alt="${candidate.name}" class="w-full aspect-[16/9] rounded-lg object-cover mb-3 shadow-sm border">
-                            <div class="flex justify-between items-center mb-1">
-                                <span class="font-semibold text-gray-700">${candidate.name}</span>
-                                <span class="text-sm font-bold text-gray-800">${percentage}%</span>
-                            </div>
-                            <div class="w-full bg-gray-200 rounded-full h-5">
-                                <div class="bg-indigo-600 h-5 rounded-full text-white text-xs font-medium flex items-center justify-center progress-bar-inner" style="width: ${percentage}%">
-                                   ${candidate.votes.toLocaleString('id-ID')} Suara
-                                </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background-color: ${color};"></div>
+                            <div class="flex-1">
+                                <div class="font-semibold text-gray-700 text-sm">${candidate.name}</div>
+                                <div class="text-xs text-gray-500">${candidate.votes.toLocaleString('id-ID')} suara (${percentage}%)</div>
                             </div>
                         </div>
                     `;
                 }).join('');
 
-                // Membuat kartu event
+                // Membuat kartu event dengan pie chart
                 const eventCard = `
                     <div class="bg-white p-6 rounded-2xl shadow-lg border border-gray-200 transform hover:-translate-y-1 transition-transform duration-300">
-                        <h2 class="text-xl font-bold text-gray-900">${event.eventName}</h2>
-                        <p class="text-sm text-gray-500 mb-6">${event.position}</p>
-                        <div>
-                            ${candidatesHtml}
+                        <h2 class="text-xl font-bold text-gray-900 text-center">${event.eventName}</h2>
+                        <p class="text-sm text-gray-500 mb-4 text-center">${event.position}</p>
+                        
+                        <!-- Pie Chart -->
+                        <div class="chart-container mb-4">
+                            <canvas id="${chartId}"></canvas>
                         </div>
-                        <div class="text-right mt-4 text-sm text-gray-600 font-medium">
-                            Total Suara Masuk: <span class="font-bold">${totalVotes.toLocaleString('id-ID')}</span>
+                        
+                        <!-- Legend -->
+                        <div class="mt-4 p-4 bg-gray-50 rounded-xl">
+                            ${legendHtml}
+                        </div>
+                        
+                        <div class="text-center mt-4 text-sm text-gray-600 font-medium">
+                            Total Suara Masuk: <span class="font-bold text-indigo-600">${totalVotes.toLocaleString('id-ID')}</span>
                         </div>
                     </div>
                 `;
 
                 // Menambahkan kartu ke kontainer
                 container.innerHTML += eventCard;
+            });
+
+            // Membuat chart setelah HTML sudah ditambahkan ke DOM
+            events.forEach((event, eventIndex) => {
+                const chartId = `pie-chart-${eventIndex}`;
+                const ctx = document.getElementById(chartId).getContext('2d');
+                
+                const labels = event.candidates.map(c => c.name);
+                const data = event.candidates.map(c => c.votes);
+                const colors = event.candidates.map((_, index) => chartColors[index % chartColors.length]);
+
+                chartInstances[chartId] = new Chart(ctx, {
+                    type: 'pie',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            data: data,
+                            backgroundColor: colors,
+                            borderColor: '#ffffff',
+                            borderWidth: 3,
+                            hoverBorderWidth: 4,
+                            hoverOffset: 10
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        plugins: {
+                            legend: {
+                                display: false // Kita pakai custom legend
+                            },
+                            tooltip: {
+                                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                                titleFont: { size: 14, weight: 'bold' },
+                                bodyFont: { size: 13 },
+                                padding: 12,
+                                cornerRadius: 8,
+                                callbacks: {
+                                    label: function(context) {
+                                        const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                        const value = context.raw;
+                                        const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
+                                        return `${value.toLocaleString('id-ID')} suara (${percentage}%)`;
+                                    }
+                                }
+                            }
+                        },
+                        animation: {
+                            animateRotate: true,
+                            animateScale: true
+                        }
+                    }
+                });
             });
         }
 
