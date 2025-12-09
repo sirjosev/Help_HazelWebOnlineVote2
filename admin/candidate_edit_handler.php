@@ -27,7 +27,7 @@ $foto_kandidat_name = $current_photo; // Default ke foto yang sudah ada
 
 // --- Logika Upload Foto Baru ---
 if (isset($_FILES['foto_kandidat']) && $_FILES['foto_kandidat']['error'] == 0) {
-    $target_dir = "../assets/images/";
+    $target_dir = "../asset/images/";
 
     // Hapus foto lama jika bukan placeholder
     if ($current_photo !== 'placeholder.png' && file_exists($target_dir . $current_photo)) {

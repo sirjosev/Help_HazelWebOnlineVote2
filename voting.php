@@ -70,7 +70,8 @@ $conn->close();
                         <?php foreach ($candidates as $candidate): ?>
                             <div class="border border-gray-200 rounded-xl p-6 hover:shadow-md transition-shadow duration-300">
                                 <div class="flex items-center space-x-4 mb-4">
-                                    <img src="<?php echo $base_url . 'assets/images/' . htmlspecialchars($candidate['foto_kandidat'] ?: 'placeholder.png'); ?>" alt="Foto <?php echo htmlspecialchars($candidate['nama_kandidat']); ?>" class="w-20 h-20 rounded-full object-cover border-2 border-indigo-200">
+                                    <?php $foto_kandidat = $candidate['foto_kandidat'] ?: 'placeholder.png'; ?>
+                                    <img src="asset/images/<?php echo htmlspecialchars($foto_kandidat); ?>" alt="Foto <?php echo htmlspecialchars($candidate['nama_kandidat']); ?>" class="w-20 h-20 rounded-full object-cover border-2 border-indigo-200">
                                     <div>
                                         <h3 class="text-xl font-bold text-gray-800"><?php echo htmlspecialchars($candidate['nama_kandidat']); ?></h3>
                                     </div>

@@ -39,7 +39,7 @@ if ($events_result->num_rows > 0) {
             $event_data['candidates'][] = [
                 'name' => $candidate['nama_kandidat'],
                 'votes' => (int)$candidate['votes'],
-                'image' => $base_url . 'assets/images/' . $image_name
+                'image' => 'asset/images/' . $image_name
             ];
         }
         $stmt->close();

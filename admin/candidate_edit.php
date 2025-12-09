@@ -80,7 +80,7 @@ if (!$candidate) {
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700">Foto Saat Ini</label>
-                        <img src="<?php echo $base_url . 'assets/images/' . htmlspecialchars($candidate['foto_kandidat'] ?: 'placeholder.png'); ?>" alt="Foto saat ini" class="mt-2 h-24 w-auto rounded-md">
+                        <img src="../asset/images/<?php echo htmlspecialchars($candidate['foto_kandidat'] ?: 'placeholder.png'); ?>" alt="Foto saat ini" class="mt-2 h-24 w-auto rounded-md">
                     </div>
                     <div>
                         <label for="foto_kandidat" class="block text-sm font-medium text-gray-700">Ganti Foto (Opsional)</label>

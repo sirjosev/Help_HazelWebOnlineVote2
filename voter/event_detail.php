@@ -109,9 +109,19 @@ $candidates = $stmt_candidates->get_result();
 </head>
 <body class="bg-gray-100">
     <main class="max-w-2xl mx-auto py-8 px-4">
+        <!-- Banner Event -->
+        <?php if (!empty($event['banner_event'])): ?>
+        <div class="mb-6 rounded-xl overflow-hidden shadow-lg">
+            <img src="../asset/images/banners/<?php echo htmlspecialchars($event['banner_event']); ?>" 
+                 alt="Banner <?php echo htmlspecialchars($event['nama_event']); ?>" 
+                 class="w-full h-auto object-cover">
+        </div>
+        <?php endif; ?>
+        
         <div class="text-center mb-6">
             <h1 class="text-3xl font-bold text-gray-900"><?php echo htmlspecialchars($event['nama_event']); ?></h1>
-            <p class="text-gray-600">Silakan pilih salah satu kandidat di bawah ini.</p>
+            <p class="text-gray-500 text-sm mt-1"><?php echo htmlspecialchars($event['posisi_jabatan'] ?? ''); ?></p>
+            <p class="text-gray-600 mt-2">Silakan pilih salah satu kandidat di bawah ini.</p>
         </div>
 
         <form action="submit_vote.php" method="POST" onsubmit="return confirm('Apakah Anda yakin dengan pilihan Anda? Pilihan tidak dapat diubah setelah dikirim.');">
@@ -132,7 +142,11 @@ $candidates = $stmt_candidates->get_result();
                                 <p class="text-sm text-gray-500"><?php echo htmlspecialchars($candidate['partai_asal'] ?? 'Independen'); ?></p>
                             </div>
                             <div class="ml-0 sm:ml-auto mt-4 sm:mt-0 sm:pl-4 flex-shrink-0">
-                                <img src="<?php echo $base_url . 'assets/images/' . htmlspecialchars($candidate['foto_kandidat'] ?: 'placeholder.png'); ?>" alt="Foto <?php echo htmlspecialchars($candidate['nama_kandidat']); ?>" class="w-48 h-auto aspect-[16/9] rounded-lg object-cover shadow-md border">
+                                <?php 
+                                $foto = $candidate['foto_kandidat'] ?: 'placeholder.png';
+                                $foto_path = "../asset/images/" . htmlspecialchars($foto);
+                                ?>
+                                <img src="<?php echo $foto_path; ?>" alt="Foto <?php echo htmlspecialchars($candidate['nama_kandidat']); ?>" class="w-48 h-auto aspect-[16/9] rounded-lg object-cover shadow-md border">
                             </div>
                         </div>
                         <div class="mt-4 pt-4 border-t border-gray-200">

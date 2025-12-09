@@ -105,7 +105,7 @@ $candidates_result = $stmt_candidates->get_result();
                             <tr>
                                 <td class="px-6 py-4 text-lg font-bold text-gray-700"><?php echo $candidate['nomor_urut']; ?></td>
                                 <td class="px-6 py-4">
-                                    <img src="<?php echo $base_url . 'assets/images/' . htmlspecialchars($candidate['foto_kandidat'] ?: 'placeholder.png'); ?>" alt="Foto" class="h-12 w-12 rounded-full object-cover">
+                                    <img src="../asset/images/<?php echo htmlspecialchars($candidate['foto_kandidat'] ?: 'placeholder.png'); ?>" alt="Foto" class="h-12 w-12 rounded-full object-cover">
                                 </td>
                                 <td class="px-6 py-4 font-semibold text-gray-900"><?php echo htmlspecialchars($candidate['nama_kandidat']); ?></td>
                                 <td class="px-6 py-4 text-gray-700"><?php echo htmlspecialchars($candidate['partai_asal']); ?></td>

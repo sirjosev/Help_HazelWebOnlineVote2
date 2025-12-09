@@ -15,7 +15,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Handle file upload
     if (isset($_FILES['foto_kandidat']) && $_FILES['foto_kandidat']['error'] == 0) {
-        $target_dir = "../assets/images/";
+        $target_dir = "../asset/images/";
         // Buat nama file unik untuk mencegah penimpaan
         $foto_kandidat_name = uniqid() . '-' . basename($_FILES["foto_kandidat"]["name"]);
         $target_file = $target_dir . $foto_kandidat_name;
