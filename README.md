@@ -131,6 +131,7 @@ CREATE TABLE `events` (
   `posisi_jabatan` VARCHAR(255) NOT NULL,
   `wilayah` VARCHAR(100) NOT NULL,
   `deskripsi` TEXT,
+  `banner_event` VARCHAR(255) NULL,
   `waktu_mulai` DATETIME NOT NULL,
   `waktu_selesai` DATETIME NOT NULL,
   `created_by` INT,
@@ -165,6 +166,15 @@ CREATE TABLE `votes` (
 ```
 
 </details>
+
+### 🔄 Migrasi Database (Untuk Database yang Sudah Ada)
+
+Jika Anda sudah memiliki database yang berjalan dan perlu menambahkan fitur baru, jalankan query berikut di phpMyAdmin:
+
+```sql
+-- Menambahkan kolom banner_event untuk fitur upload banner kampanye event
+ALTER TABLE events ADD COLUMN banner_event VARCHAR(255) NULL AFTER deskripsi;
+```
 
 ---
 ## 🛠️ Instalasi & Setup Lokal

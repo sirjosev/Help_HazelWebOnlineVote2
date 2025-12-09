@@ -25,6 +25,7 @@ $wilayah = $_POST['wilayah'];
 $deskripsi = $_POST['deskripsi'];
 $waktu_mulai = $_POST['waktu_mulai'];
 $waktu_selesai = $_POST['waktu_selesai'];
+$current_banner = $_POST['current_banner'] ?? '';
 
 // --- Validasi Sederhana ---
 if (empty($event_id) || empty($nama_event) || empty($posisi_jabatan) || empty($wilayah) || empty($waktu_mulai) || empty($waktu_selesai)) {
@@ -41,6 +42,41 @@ if (strtotime($waktu_mulai) >= strtotime($waktu_selesai)) {
     exit;
 }
 
+// --- Handle Banner Upload ---
+$banner_event = $current_banner; // Default: gunakan banner yang ada
+
+if (isset($_FILES['banner_event']) && $_FILES['banner_event']['error'] == 0) {
+    $target_dir = "../asset/images/banners/";
+    
+    // Buat folder jika belum ada
+    if (!file_exists($target_dir)) {
+        mkdir($target_dir, 0777, true);
+    }
+    
+    // Validasi tipe file
+    $allowed_types = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+    $file_type = $_FILES['banner_event']['type'];
+    
+    if (in_array($file_type, $allowed_types)) {
+        // Validasi ukuran (max 5MB)
+        if ($_FILES['banner_event']['size'] <= 5 * 1024 * 1024) {
+            // Buat nama file unik
+            $extension = pathinfo($_FILES['banner_event']['name'], PATHINFO_EXTENSION);
+            $new_banner = 'banner_' . uniqid() . '.' . $extension;
+            $target_file = $target_dir . $new_banner;
+            
+            // Pindahkan file
+            if (move_uploaded_file($_FILES['banner_event']['tmp_name'], $target_file)) {
+                // Hapus banner lama jika ada dan berbeda
+                if (!empty($current_banner) && file_exists($target_dir . $current_banner)) {
+                    unlink($target_dir . $current_banner);
+                }
+                $banner_event = $new_banner;
+            }
+        }
+    }
+}
+
 // --- Query Update Database ---
 $sql = "UPDATE events
         SET nama_event = ?,
@@ -48,7 +84,8 @@ $sql = "UPDATE events
             wilayah = ?,
             deskripsi = ?,
             waktu_mulai = ?,
-            waktu_selesai = ?
+            waktu_selesai = ?,
+            banner_event = ?
         WHERE id = ?";
 
 $stmt = $conn->prepare($sql);
@@ -61,13 +98,14 @@ if ($stmt === false) {
 }
 
 // Bind parameter ke statement
-$stmt->bind_param("ssssssi",
+$stmt->bind_param("sssssssi",
     $nama_event,
     $posisi_jabatan,
     $wilayah,
     $deskripsi,
     $waktu_mulai,
     $waktu_selesai,
+    $banner_event,
     $event_id
 );
 

@@ -63,9 +63,10 @@ $waktu_selesai = date('Y-m-d\TH:i', strtotime($event['waktu_selesai']));
     <!-- Form Content -->
     <main class="max-w-2xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
         <div class="bg-white p-8 rounded-2xl shadow-lg">
-            <form action="event_edit_handler.php" method="POST">
+            <form action="event_edit_handler.php" method="POST" enctype="multipart/form-data">
                 <!-- Hidden input for event ID -->
                 <input type="hidden" name="event_id" value="<?php echo $event['id']; ?>">
+                <input type="hidden" name="current_banner" value="<?php echo htmlspecialchars($event['banner_event'] ?? ''); ?>">
 
                 <div class="grid grid-cols-1 gap-6">
                     <div>
@@ -101,6 +102,35 @@ $waktu_selesai = date('Y-m-d\TH:i', strtotime($event['waktu_selesai']));
                         <label for="deskripsi" class="block text-sm font-medium text-gray-700">Deskripsi Singkat</label>
                         <textarea name="deskripsi" id="deskripsi" rows="3" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-2"><?php echo htmlspecialchars($event['deskripsi']); ?></textarea>
                     </div>
+                    
+                    <!-- Banner Campaign Upload/Edit -->
+                    <div class="border-2 border-dashed border-gray-300 rounded-xl p-6 bg-gray-50">
+                        <label class="block text-sm font-medium text-gray-700 mb-3">
+                            <svg class="inline-block w-5 h-5 mr-1 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                            </svg>
+                            Banner Kampanye Event
+                        </label>
+                        
+                        <?php if (!empty($event['banner_event'])): ?>
+                        <!-- Banner Saat Ini -->
+                        <div class="mb-4">
+                            <p class="text-xs font-medium text-gray-600 mb-2">Banner Saat Ini:</p>
+                            <img src="../asset/images/banners/<?php echo htmlspecialchars($event['banner_event']); ?>" alt="Banner Event" class="w-full max-h-40 object-cover rounded-lg shadow-sm border">
+                        </div>
+                        <?php endif; ?>
+                        
+                        <div class="mt-2">
+                            <input type="file" name="banner_event" id="banner_event" accept="image/*" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer">
+                            <p class="text-xs text-gray-500 mt-2">Format: JPG, PNG, GIF (Maks. 5MB). Kosongkan jika tidak ingin mengubah banner.</p>
+                            <!-- Preview Banner Baru -->
+                            <div id="banner-preview" class="mt-4 hidden">
+                                <p class="text-xs font-medium text-green-600 mb-2">Preview Banner Baru:</p>
+                                <img id="banner-preview-img" src="" alt="Preview Banner" class="w-full max-h-40 object-cover rounded-lg shadow-sm border border-green-300">
+                            </div>
+                        </div>
+                    </div>
+                    
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <label for="waktu_mulai" class="block text-sm font-medium text-gray-700">Waktu Mulai Voting</label>
@@ -118,6 +148,26 @@ $waktu_selesai = date('Y-m-d\TH:i', strtotime($event['waktu_selesai']));
                     </button>
                 </div>
             </form>
+            
+            <script>
+            // Preview banner sebelum upload
+            document.getElementById('banner_event').addEventListener('change', function(e) {
+                const preview = document.getElementById('banner-preview');
+                const previewImg = document.getElementById('banner-preview-img');
+                const file = e.target.files[0];
+                
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        previewImg.src = e.target.result;
+                        preview.classList.remove('hidden');
+                    }
+                    reader.readAsDataURL(file);
+                } else {
+                    preview.classList.add('hidden');
+                }
+            });
+            </script>
         </div>
     </main>
 </body>

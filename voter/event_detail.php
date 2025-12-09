@@ -45,7 +45,67 @@ $candidates = $stmt_candidates->get_result();
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../asset/css/style.css">
-    <style> body { font-family: 'Inter', sans-serif; } </style>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        
+        /* Styling untuk kandidat yang dipilih */
+        .candidate-card {
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .candidate-card.selected {
+            border-color: #10b981 !important;
+            border-width: 3px !important;
+            background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%) !important;
+            box-shadow: 0 10px 25px -5px rgba(16, 185, 129, 0.3) !important;
+            transform: scale(1.02);
+        }
+        
+        .candidate-card.selected .nomor-urut {
+            background-color: #10b981 !important;
+            color: white !important;
+        }
+        
+        .candidate-card.selected .candidate-name {
+            color: #065f46 !important;
+        }
+        
+        /* Ikon centang */
+        .check-icon {
+            display: none;
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: #10b981;
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            z-index: 10;
+        }
+        
+        .candidate-card.selected .check-icon {
+            display: flex;
+            animation: popIn 0.3s ease;
+        }
+        
+        @keyframes popIn {
+            0% { transform: scale(0); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+        
+        /* Kandidat tidak terpilih menjadi lebih pudar */
+        .candidate-card.not-selected {
+            opacity: 0.6;
+            filter: grayscale(30%);
+        }
+    </style>
 </head>
 <body class="bg-gray-100">
     <main class="max-w-2xl mx-auto py-8 px-4">
@@ -56,16 +116,19 @@ $candidates = $stmt_candidates->get_result();
 
         <form action="submit_vote.php" method="POST" onsubmit="return confirm('Apakah Anda yakin dengan pilihan Anda? Pilihan tidak dapat diubah setelah dikirim.');">
             <input type="hidden" name="event_id" value="<?php echo $event_id; ?>">
-            <div class="space-y-4">
+            <div class="space-y-4" id="candidates-container">
                 <?php while($candidate = $candidates->fetch_assoc()): ?>
-                    <label class="block bg-white p-4 rounded-xl shadow-md cursor-pointer hover:ring-2 hover:ring-indigo-200 transition-all duration-200 peer-checked:ring-4 peer-checked:ring-indigo-500 peer-checked:bg-indigo-50">
-                        <input type="radio" name="candidate_id" value="<?php echo $candidate['id']; ?>" required class="hidden peer">
+                    <label class="candidate-card block bg-white p-4 rounded-xl shadow-md cursor-pointer border-2 border-gray-200 hover:border-indigo-300 hover:shadow-lg">
+                        <!-- Ikon Centang -->
+                        <span class="check-icon">✓</span>
+                        
+                        <input type="radio" name="candidate_id" value="<?php echo $candidate['id']; ?>" required class="hidden candidate-radio">
                         <div class="flex flex-col sm:flex-row items-center text-center sm:text-left">
-                            <div class="flex-shrink-0 h-16 w-16 bg-gray-200 rounded-full flex items-center justify-center text-2xl font-bold text-gray-700 transition-colors peer-checked:bg-indigo-600 peer-checked:text-white mb-4 sm:mb-0">
+                            <div class="nomor-urut flex-shrink-0 h-16 w-16 bg-gray-200 rounded-full flex items-center justify-center text-2xl font-bold text-gray-700 mb-4 sm:mb-0 transition-all duration-300">
                                 <?php echo $candidate['nomor_urut']; ?>
                             </div>
                             <div class="ml-0 sm:ml-4 flex-grow">
-                                <p class="text-lg font-semibold text-gray-900 transition-colors peer-checked:text-indigo-800"><?php echo htmlspecialchars($candidate['nama_kandidat']); ?></p>
+                                <p class="candidate-name text-lg font-semibold text-gray-900 transition-colors duration-300"><?php echo htmlspecialchars($candidate['nama_kandidat']); ?></p>
                                 <p class="text-sm text-gray-500"><?php echo htmlspecialchars($candidate['partai_asal'] ?? 'Independen'); ?></p>
                             </div>
                             <div class="ml-0 sm:ml-auto mt-4 sm:mt-0 sm:pl-4 flex-shrink-0">
@@ -104,10 +167,40 @@ $candidates = $stmt_candidates->get_result();
                 <?php endwhile; ?>
             </div>
             <div class="mt-8">
-                <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-lg text-lg">Kirim Pilihan Saya</button>
+                <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-lg text-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed" id="submit-btn">Kirim Pilihan Saya</button>
             </div>
         </form>
+        
+        <div class="mt-4 text-center">
+            <a href="dashboard.php" class="text-gray-500 hover:text-indigo-600 text-sm">&larr; Kembali ke Dashboard</a>
+        </div>
     </main>
+    
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const cards = document.querySelectorAll('.candidate-card');
+        const radios = document.querySelectorAll('.candidate-radio');
+        
+        radios.forEach(radio => {
+            radio.addEventListener('change', function() {
+                // Reset semua kartu
+                cards.forEach(card => {
+                    card.classList.remove('selected', 'not-selected');
+                });
+                
+                // Tandai yang dipilih dan yang tidak dipilih
+                cards.forEach(card => {
+                    const cardRadio = card.querySelector('.candidate-radio');
+                    if (cardRadio.checked) {
+                        card.classList.add('selected');
+                    } else {
+                        card.classList.add('not-selected');
+                    }
+                });
+            });
+        });
+    });
+    </script>
 </body>
 </html>
 <?php $stmt_candidates->close(); $conn->close(); ?>
